@@ -5,8 +5,14 @@
 package it.polito.tdp.extflightdelays;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+import it.polito.tdp.extflightdelays.model.Airport;
+import it.polito.tdp.extflightdelays.model.Arco;
 import it.polito.tdp.extflightdelays.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,7 +41,20 @@ public class FXMLController {
 
     @FXML
     void doAnalizzaAeroporti(ActionEvent event) {
-    	//TODO
+    	
+    	int minimo = Integer.parseInt(distanzaMinima.getText());
+    	
+    	Graph<Airport, DefaultWeightedEdge> grafo = model.creaGrafo(minimo);
+    	Map<Integer, Airport> airports = model.getAirports();
+    	
+    	txtResult.setText("Grafo creato con "+grafo.vertexSet().size()+" vertici e "+grafo.edgeSet().size()+" archi");
+    	txtResult.appendText("\nELENCO ROTTE:\n");
+    	
+    	for(Arco a : model.getEdges()) {
+    		txtResult.appendText(airports.get(a.getOriginAirId()).getAirportName()+"-"+airports.get(a.getDestinationAirId()).getAirportName()+": "+a.getPeso()+"\n");
+    	}
+    	
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
